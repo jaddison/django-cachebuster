@@ -28,15 +28,21 @@ Installation
 
 #. Copy or symlink the ``cachebuster`` package into your django project directory or install it by running one of the following commands:
 
-    ``python setup.py install``
+::
+
+    python setup.py install
 
     or
 
-    ``pip install django-cachebuster``
+::
+
+    pip install django-cachebuster
     
     or
 
-    ``easy_install django-cachebuster``
+::
+
+    easy_install django-cachebuster
 
 #. Add ``cachebuster`` to your ``INSTALLED_APPS`` in your project's ``settings.py`` module.
 
@@ -44,7 +50,7 @@ Installation
 Template Usage
 ----------------------
 
-``{% static filename %}`` attempts to use the ``CACHEBUSTER_UNIQUE_STRING`` (see Advanced Settings below) setting to get a cached value to append to your static URLs (ie. STATIC_URL). and ``{% media filename %}`` tags in your template files.  If ``CACHEBUSTER_UNIQUE_STRING`` is not set, it falls back to the last date modified of the file.  If ``CACHEBUSTER_UNIQUE_STRING`` is used, you can force last-date-modified behavior by adding ``True`` into the tag statement like so: ``{% static filename True %}``.  For example
+``{% static filename %}`` attempts to use the ``CACHEBUSTER_UNIQUE_STRING`` (see Advanced Settings below) setting to get a cached value to append to your static URLs (ie. STATIC_URL).  If ``CACHEBUSTER_UNIQUE_STRING`` is not set, it falls back to the last date modified of the file.  If ``CACHEBUSTER_UNIQUE_STRING`` is used, you can force last-date-modified behavior by adding ``True`` into the tag statement like so: ``{% static filename True %}``.  For example
 
 ::
 
@@ -65,6 +71,8 @@ This would yield something along the lines of:
     <img src='{% media uploads/uid1-avatar.jpg %}' />
 
 would result in something like this:
+
+::
 
     <img src='/media/uploads/uid1-avatar.jpg?034511190510' />
 
