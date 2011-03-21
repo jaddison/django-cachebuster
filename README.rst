@@ -66,7 +66,7 @@ This would yield something along the lines of:
 
 would result in something like this:
 
-    <img src='/media/uploads/uid1-avatar.jpg?034511190510 %}' />
+    <img src='/media/uploads/uid1-avatar.jpg?034511190510' />
 
 Advanced Settings
 ----------------------
