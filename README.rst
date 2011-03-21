@@ -82,15 +82,16 @@ If ``CACHEBUSTER_UNIQUE_STRING`` is not set, the file's last modified datetime w
 ::
 
     from cachebuster.detectors import git
-    CACHEBUSTER_UNIQUE_STRING = git.unique_string()
+    CACHEBUSTER_UNIQUE_STRING = git.unique_string(__file__)
 
 or if you wanted it to be a short busting string:
 
 ::
 
     from cachebuster.detectors import git
-    CACHEBUSTER_UNIQUE_STRING = git.unique_string()[:8]
+    CACHEBUSTER_UNIQUE_STRING = git.unique_string(__file__)[:8]
 
+``git.unique_string(__file__)`` requires that the user pass in ``__file__`` so that it has the context of your Django settings.py file.  If it wasn't passed in, django-cachebuster would only have its own context from which to grab the ``.git`` directory, not that of the user's project.  (An alternative to this is to use Python's ``inspect`` module - but there are some warnings around using it.)
 
 Notes
 -----

@@ -2,8 +2,11 @@ __author__ = 'James Addison'
 
 import os
 
-def unique_string():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+def unique_string(file):
+    # TODO: consider using 'inspect' to get the calling module rather than
+    # forcing the user to pass it in.  It's passed in because we need to find the .git dir
+    # for the calling module, not that of django-cachebuster!
+    base_dir = original_dir = os.path.dirname(os.path.abspath(file))
     while True:
         git_dir = os.path.normpath(os.path.join(base_dir, '.git'))
         if os.path.isdir(git_dir):
