@@ -11,7 +11,7 @@ setup(
     author='James Addison',
     author_email='code@scottisheyes.com',
     packages = ['cachebuster','cachebuster.templatetags','cachebuster.detectors'],
-    version = '0.1.2',
+    version = '0.1.3',
     url='http://github.com/jaddison/django-cachebuster',
     keywords=[],
     license='BSD',
