@@ -26,7 +26,7 @@ Requirements
 Installation
 ------------
 
-#. Copy or symlink the ``cachebuster`` package into your django project directory or install it by running one of the following commands:
+Copy or symlink the ``cachebuster`` package into your django project directory or install it by running one of the following commands:
 
 ::
 
@@ -40,7 +40,7 @@ Installation
 
     easy_install django-cachebuster
 
-#. Add ``cachebuster`` to your ``INSTALLED_APPS`` in your project's ``settings.py`` module.
+Now, add ``cachebuster`` to your ``INSTALLED_APPS`` in your project's ``settings.py`` module.
 
 
 Template Usage
