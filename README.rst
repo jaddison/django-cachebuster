@@ -40,8 +40,33 @@ Installation
 
 #. Add ``cachebuster`` to your ``INSTALLED_APPS`` in your project's ``settings.py`` module.
 
-#. Use the ``{% static filename %}`` and ``{% media filename %}`` tags in your template files.
 
+Template Usage
+----------------------
+
+``{% static filename %}`` attempts to use the ``CACHEBUSTER_UNIQUE_STRING`` (see Advanced Settings below) setting to get a cached value to append to your static URLs (ie. STATIC_URL). and ``{% media filename %}`` tags in your template files.  If ``CACHEBUSTER_UNIQUE_STRING`` is not set, it falls back to the last date modified of the file.  If ``CACHEBUSTER_UNIQUE_STRING`` is used, you can force last-date-modified behavior by adding ``True`` into the tag statement like so: ``{% static filename True %}``.  For example
+
+::
+
+    <link rel="stylesheet" href="{% static css/reset.css %}" type="text/css">
+    <link rel="stylesheet" href="{% static css/fonts.css True %}" type="text/css">
+
+This would yield something along the lines of:
+
+::
+
+    <link rel="stylesheet" href="/static/css/reset.css?927f6b650afce4111514" type="text/css">
+    <link rel="stylesheet" href="/static/css/fonts.css?015509150311" type="text/css">
+
+``{% media filename %}`` is similar but has slightly different behavior, as the file content has a different origin (user uploaded content like avatars, videos, etc.) and cannot depend on any git comment hash.  This is why there is no behaviour other than the last modified date method for MEDIA_URL files.
+
+::
+
+    <img src='{% media uploads/uid1-avatar.jpg %}' />
+
+would result in something like this:
+
+    <img src='/media/uploads/uid1-avatar.jpg?034511190510 %}' />
 
 Advanced Settings
 ----------------------
