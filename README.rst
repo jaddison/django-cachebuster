@@ -32,13 +32,9 @@ Installation
 
     python setup.py install
 
-    or
-
 ::
 
     pip install django-cachebuster
-    
-    or
 
 ::
 
