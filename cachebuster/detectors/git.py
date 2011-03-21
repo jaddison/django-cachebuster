@@ -17,18 +17,32 @@ def unique_string(file):
         # if they are the same, then we've reached the root directory and
         # can't move up anymore - there is no .git directory.
         if new_base_dir == base_dir:
-            return None
+            raise EnvironmentError, "django-cachebuster could not find a '.git' directory in your project path. (Moving up from %s)" % original_dir
 
         base_dir = new_base_dir
 
     # Read the HEAD ref
     fhead = open(os.path.join(git_dir, 'HEAD'), 'r')
-    ref_name = fhead.readline().split(" ")[1].strip()
-    fhead.close()
+    if fhead:
+        ref = None
+        try:
+            line = fhead.readline().strip()
+            ref_name = line.split(" ")[1].strip()
 
-    # Read the commit id
-    fref = open(os.path.join(git_dir, ref_name), 'r')
-    ref = fref.readline().strip()
-    fref.close()
+            # Read the commit id
+            fref = open(os.path.join(git_dir, ref_name), 'r')
+            if fref:
+                ref = fref.readline().strip()
+                fref.close()
+        except IndexError:
+            # if we get here, it means the git project is in a 'detached HEAD' state - ie. on a tag.
+            # just get the commit hash from HEAD instead!
+            ref = line.strip()
 
-    return unicode(ref)
+        fhead.close()
+        
+        if ref:
+            return unicode(ref)
+
+    raise EnvironmentError, "django-cachebuster ran into a problem parsing a commit hash in your .git directory. (%s)" % git_dir
+
