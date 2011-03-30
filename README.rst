@@ -46,6 +46,8 @@ Now, add ``cachebuster`` to your ``INSTALLED_APPS`` in your project's ``settings
 Template Usage
 ----------------------
 
+To use these cache-busting template tags, you'll need to load the template tag module at the top of each template with ``{% load cachebuster%}``.
+
 ``{% static filename %}`` attempts to use the ``CACHEBUSTER_UNIQUE_STRING`` (see Advanced Settings below) setting to get a cached value to append to your static URLs (ie. STATIC_URL).  If ``CACHEBUSTER_UNIQUE_STRING`` is not set, it falls back to the last date modified of the file.  If ``CACHEBUSTER_UNIQUE_STRING`` is used, you can force last-date-modified behavior by adding ``True`` into the tag statement like so: ``{% static filename True %}``.  For example
 
 ::
