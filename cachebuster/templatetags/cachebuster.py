@@ -64,7 +64,9 @@ class CacheBusterTag(template.Node):
             if self.force_timestamp:
                 unique_string = self.get_file_modified(absolute_path)
             else:
-                unique_string = getattr(settings, 'CACHEBUSTER_UNIQUE_STRING', self.get_file_modified(absolute_path))
+                unique_string = getattr(settings, 'CACHEBUSTER_UNIQUE_STRING', None)
+                if not unique_string:
+                    unique_string = self.get_file_modified(absolute_path)
 
         return url_prepend + path + '?' + unique_string
 
