@@ -71,5 +71,10 @@ class CacheBusterTag(template.Node):
         return url_prepend + path + '?' + unique_string
 
     def get_file_modified(self, path):
-        return datetime.datetime.fromtimestamp(os.path.getmtime(os.path.abspath(path))).strftime('%S%M%H%d%m%y')
-
+        try:
+            return datetime.datetime.fromtimestamp(os.path.getmtime(os.path.abspath(path))).strftime('%S%M%H%d%m%y')
+        except:
+            # if the file can't be found, return this; it will be an
+            # indicator to the developer that collectstatic needs to be run
+            # (as if the resulting 404 for the missing file wouldn't be)
+            return '000000000000'
