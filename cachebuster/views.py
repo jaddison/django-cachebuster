@@ -6,17 +6,27 @@ development, and SHOULD NOT be used in a production setting.
 """
 from django.conf import settings
 from django.http import Http404
-from django.contrib.staticfiles.views import serve as django_staticfiles_serve
 from django.views.static import serve as django_serve
+try:
+    # only in django 1.3+
+    from django.contrib.staticfiles.views import serve as django_staticfiles_serve
+except ImportError:
+    django_staticfiles_serve = None
 
 
-def static_serve(request, path, document_root=None, insecure=False, **kwargs):
+def static_serve(request, path, document_root=None, show_indexes=False):
     try:
-        return django_staticfiles_serve(request, path, document_root, insecure, **kwargs)
+        if django_staticfiles_serve:
+            return django_staticfiles_serve(request, path, document_root)
+        else:
+            return django_serve(request, path, document_root, show_indexes)
     except Http404:
-        if getattr(settings, 'CACHEBUSTER_PREPEND', False):
+        if getattr(settings, 'CACHEBUSTER_PREPEND_STATIC', False):
             unique_string, new_path = path.split("/", 1)
-            return django_staticfiles_serve(request, new_path, document_root, insecure, **kwargs)
+            if django_staticfiles_serve:
+                return django_staticfiles_serve(request, new_path, document_root)
+            else:
+                return django_serve(request, new_path, document_root, show_indexes)
         raise
 
 
