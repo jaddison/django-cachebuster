@@ -51,10 +51,13 @@ class CacheBusterTag(template.Node):
 
         if self.is_media:
             url_prepend = settings.MEDIA_URL
+            unique_prepend = getattr(settings, 'CACHEBUSTER_PREPEND_MEDIA', False)
             unique_string = self.get_file_modified(os.path.join(settings.MEDIA_ROOT, path))
         else:
             # django versions < 1.3 don't have a STATIC_URL, so fall back to MEDIA_URL
             url_prepend = getattr(settings, "STATIC_URL", settings.MEDIA_URL)
+            unique_prepend = getattr(settings, 'CACHEBUSTER_PREPEND_STATIC', False)
+
             if settings.DEBUG and finders:
                 absolute_path = finders.find(path)
             else:
@@ -69,7 +72,7 @@ class CacheBusterTag(template.Node):
                     unique_string = self.get_file_modified(absolute_path)
 
         # Add in harder cachebusting required for CloudFront et al
-        if getattr(settings, 'CACHEBUSTER_PREPEND', False):
+        if unique_prepend:
           return url_prepend + unique_string + '/' + path
         else:
           return url_prepend + path + '?' + unique_string

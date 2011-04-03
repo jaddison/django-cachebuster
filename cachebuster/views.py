@@ -24,7 +24,7 @@ def media_serve(request, path, document_root=None, show_indexes=False):
     try:
         return django_serve(request, path, document_root, show_indexes)
     except Http404:
-        if getattr(settings, 'CACHEBUSTER_PREPEND', False):
+        if getattr(settings, 'CACHEBUSTER_PREPEND_MEDIA', False):
             unique_string, new_path = path.split("/", 1)
             return django_serve(request, new_path, document_root, show_indexes)
         raise
