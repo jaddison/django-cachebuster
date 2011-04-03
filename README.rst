@@ -46,7 +46,7 @@ Now, add ``cachebuster`` to your ``INSTALLED_APPS`` in your project's ``settings
 Template Usage
 ----------------------
 
-To use these cache-busting template tags, you'll need to load the template tag module at the top of each template with ``{% load cachebuster %}``.  Alternatively, as these tags will most likely be used in the majority of a project's templates, Django can be told to auto-load the tags (avoiding the requisite ``{% load cachebuster %}``) with the following:
+To use these cache-busting template tags, you'll need to load the template tag module at the top of each template with ``{% load cachebuster %}``.  Alternatively, as these tags will most likely be used in most of a project's templates, you can tell Django to auto-load them without the requisite ``{% load cachebuster %}`` by adding the following to your ``settings.py``:
 
 ::
 
@@ -140,6 +140,14 @@ Also when using the prepending method in a development environment, to support s
         )
 
 This is because both the prepended and the non-prepended paths need to be tested to support the above-mentioned scenarios.
+
+
+Troubleshooting
+----------------------
+
+**My date-based cache-busting unique strings keep updating even though my assets aren't changing**
+
+Are you deploying your assets from a source control system such as Subversion or Git?  By default, those systems set the last modified date of checked-out files to their check-out dates, **not** the original files' last modified dates. To fix this on Subversion, set ``use-commit-times=true`` in your Subversion config. In Git this is a little harder; it requires adding a Git post-checkout hook (or updating your deployment script). For more instructions on doing this, see the answers to `this question on Stack Overflow <http://stackoverflow.com/questions/1964470/whats-the-equivalent-of-use-commit-times-for-git>`_.
 
 
 Notes
