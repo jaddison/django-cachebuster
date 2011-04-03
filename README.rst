@@ -46,7 +46,12 @@ Now, add ``cachebuster`` to your ``INSTALLED_APPS`` in your project's ``settings
 Template Usage
 ----------------------
 
-To use these cache-busting template tags, you'll need to load the template tag module at the top of each template with ``{% load cachebuster%}``.
+To use these cache-busting template tags, you'll need to load the template tag module at the top of each template with ``{% load cachebuster %}``.  Alternatively, as these tags will most likely be used in most of a project's templates, you can tell Django to auto-load them without the requisite ``{% load cachebuster %}`` with the following:
+
+::
+
+    from django.template.loader import add_to_builtins
+    add_to_builtins('cachebuster.templatetags.cachebuster')
 
 ``{% static filename %}`` attempts to use the ``CACHEBUSTER_UNIQUE_STRING`` (see Advanced Settings below) setting to get a cached value to append to your static URLs (ie. STATIC_URL).  If ``CACHEBUSTER_UNIQUE_STRING`` is not set, it falls back to the last date modified of the file.  If ``CACHEBUSTER_UNIQUE_STRING`` is used, you can force last-date-modified behavior by adding ``True`` into the tag statement like so: ``{% static filename True %}``.  For example
 
