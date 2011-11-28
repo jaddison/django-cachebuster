@@ -22,4 +22,5 @@ setup(
       'Topic :: Internet :: WWW/HTTP :: WSGI',
       'Framework :: Django',
     ],
+    requires=['mercurial'],
 )
