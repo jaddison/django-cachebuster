@@ -1,8 +1,10 @@
+import os
+
 from mercurial import ui, hg
-from mercurial.mode import hex
+from mercurial.node import hex
 
 def unique_string(_file):
-    base_dir = original_dir = os.path.dirname(os.path.abspath(file))
+    base_dir = original_dir = os.path.dirname(os.path.abspath(_file))
     while True:
         hg_dir = os.path.normpath(os.path.join(base_dir, '.hg'))
         if os.path.isdir(hg_dir):
@@ -16,7 +18,7 @@ def unique_string(_file):
             raise EnvironmentError, "django-cachebuster could not find a '.hg' directory in your project path. (Moving up from %s)" % original_dir
 
         base_dir = new_base_dir
-    repo = hg.repository(ui.ui(), repo_path)
+    repo = hg.repository(ui.ui(), os.path.dirname(hg_dir))
     ctx = repo[None]
     changeset = ctx.parents()[0]
     return hex(changeset.node())
