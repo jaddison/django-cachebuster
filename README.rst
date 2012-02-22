@@ -1,6 +1,9 @@
 django-cachebuster -- A backwards-compatible Django 1.3+ ready set of cache-busting template tags
 =================================================================================================
 
+DJANGO 1.4+ USERS:
+------------------
+You should probably look to use Django's included ``static`` template tag rather than use django-cachebuster.  Why include a 3rd party app when you can use the built-in functionality?
 
 Overview
 --------
