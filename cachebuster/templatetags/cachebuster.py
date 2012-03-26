@@ -10,7 +10,12 @@ from django.conf import settings
 
 try:
     # finders won't exist if we're not using Django 1.3+
-    from django.contrib.staticfiles import finders
+    # Give preference to a standalone version of staticfiles
+    # over the contrib version.
+    try:
+        from staticfiles import finders
+    except ImportError:
+        from django.contrib.staticfiles import finders
 except ImportError:
     finders = None
 
