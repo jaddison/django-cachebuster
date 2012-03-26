@@ -14,7 +14,8 @@ try:
     # over the contrib version.
     try:
         from staticfiles import finders
-    except ImportError:
+    except ImportError, e:
+        print "ERROR importing staticfiles.finders: %s" % e
         from django.contrib.staticfiles import finders
 except ImportError:
     finders = None
