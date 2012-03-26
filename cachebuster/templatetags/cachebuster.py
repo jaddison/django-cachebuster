@@ -8,19 +8,6 @@ import os
 from django import template
 from django.conf import settings
 
-try:
-    # finders won't exist if we're not using Django 1.3+
-    # Give preference to a standalone version of staticfiles
-    # over the contrib version.
-    try:
-        from staticfiles import finders
-    except ImportError, e:
-        print "ERROR importing staticfiles.finders: %s" % e
-        from django.contrib.staticfiles import finders
-except ImportError:
-    finders = None
-
-
 register = template.Library()
 
 
@@ -45,6 +32,7 @@ class CacheBusterTag(template.Node):
 
         self.path = tokens[1]
         self.force_timestamp = len(tokens) == 3 and tokens[2] or False
+        self._finders = False
 
     def render(self, context):
         # self.path may be a template variable rather than a simple static file string
@@ -64,9 +52,24 @@ class CacheBusterTag(template.Node):
             url_prepend = getattr(settings, "STATIC_URL", settings.MEDIA_URL)
             unique_prepend = getattr(settings, 'CACHEBUSTER_PREPEND_STATIC', False)
 
-            if settings.DEBUG and finders:
-                absolute_path = finders.find(path)
-            else:
+            absolute_path = None
+            if settings.DEBUG:
+                if self._finders is False:
+                    # finders won't exist if we're not using Django 1.3+
+                    # Give preference to a standalone version of staticfiles
+                    # over the contrib version.
+                    # This has been moved into the body of the class because
+                    # of a compile time race condition with settings.
+                    try:
+                        from staticfiles import finders
+                        self._finders = finders
+                    except ImportError, e:
+                        print "ERROR importing staticfiles.finders: %s" % e
+                        from django.contrib.staticfiles import finders
+                        self._finders = finders
+                absolute_path = self._finders.find(path)
+
+            if absolute_path is None:
                 # django versions < 1.3 don't have a STATIC_ROOT, so fall back to MEDIA_ROOT
                 absolute_path = os.path.join(getattr(settings, 'STATIC_ROOT', settings.MEDIA_ROOT), path)
 
