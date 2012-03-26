@@ -9,7 +9,10 @@ from django.http import Http404
 from django.views.static import serve as django_serve
 try:
     # only in django 1.3+
-    from django.contrib.staticfiles.views import serve as django_staticfiles_serve
+    try:
+        from staticfiles import serve as django_staticfiles_serve
+    except ImportError:
+        from django.contrib.staticfiles.views import serve as django_staticfiles_serve
 except ImportError:
     django_staticfiles_serve = None
 
