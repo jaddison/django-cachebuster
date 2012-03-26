@@ -82,9 +82,9 @@ class CacheBusterTag(template.Node):
 
         # Add in harder cachebusting required for CloudFront et al
         if unique_prepend:
-          return url_prepend + unique_string + '/' + path
+          return url_prepend + unicode(unique_string) + '/' + path
         else:
-          return url_prepend + path + '?' + unique_string
+          return url_prepend + path + '?' + unicode(unique_string)
 
     def get_file_modified(self, path):
         try:
