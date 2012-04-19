@@ -58,7 +58,7 @@ class CacheBusterTag(template.Node):
             url_prepend = getattr(settings, "STATIC_URL", settings.MEDIA_URL)
             unique_prepend = getattr(settings, 'CACHEBUSTER_PREPEND_STATIC', False)
 
-            if settings.DEBUG and finders:
+            if settings.DEBUG and finders and 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
                 absolute_path = finders.find(path)
             else:
                 # django versions < 1.3 don't have a STATIC_ROOT, so fall back to MEDIA_ROOT
