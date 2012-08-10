@@ -8,13 +8,6 @@ import os
 from django import template
 from django.conf import settings
 
-try:
-    # finders won't exist if we're not using Django 1.3+
-    from django.contrib.staticfiles import finders
-except ImportError:
-    finders = None
-
-
 register = template.Library()
 
 
@@ -39,6 +32,7 @@ class CacheBusterTag(template.Node):
 
         self.path = tokens[1]
         self.force_timestamp = len(tokens) == 3 and tokens[2] or False
+        self._finders = False
 
     def render(self, context):
         # self.path may be a template variable rather than a simple static file string
@@ -58,9 +52,27 @@ class CacheBusterTag(template.Node):
             url_prepend = getattr(settings, "STATIC_URL", settings.MEDIA_URL)
             unique_prepend = getattr(settings, 'CACHEBUSTER_PREPEND_STATIC', False)
 
-            if settings.DEBUG and finders and 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
-                absolute_path = finders.find(path)
-            else:
+            absolute_path = None
+            if settings.DEBUG and ('staticfiles' in settings.INSTALLED_APPS or 'django.contrib.staticfiles' in settings.INSTALLED_APPS):
+                if self._finders is False:
+                    # finders won't exist if we're not using Django 1.3+
+                    # Give preference to a standalone version of staticfiles
+                    # over the contrib version.
+                    # This has been moved into the body of the class because
+                    # of a compile time race condition with settings.
+                    try:
+                        from staticfiles import finders
+                        self._finders = finders
+                    except ImportError, e:
+                        print "ERROR importing staticfiles.finders: %s" % e
+                        try:
+                            from django.contrib.staticfiles import finders
+                        except ImportError, err:
+                            print "ERROR importing django.contrib.staticfiles.finders: %s" % err
+                            self._finders = None
+                absolute_path = self._finders.find(path) if self._finders else None
+
+            if absolute_path is None:
                 # django versions < 1.3 don't have a STATIC_ROOT, so fall back to MEDIA_ROOT
                 absolute_path = os.path.join(getattr(settings, 'STATIC_ROOT', settings.MEDIA_ROOT), path)
 
@@ -73,9 +85,9 @@ class CacheBusterTag(template.Node):
 
         # Add in harder cachebusting required for CloudFront et al
         if unique_prepend:
-          return url_prepend + unique_string + '/' + path
+          return url_prepend + unicode(unique_string) + '/' + path
         else:
-          return url_prepend + path + '?' + unique_string
+          return url_prepend + path + '?' + unicode(unique_string)
 
     def get_file_modified(self, path):
         try:
