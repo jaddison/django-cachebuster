@@ -112,6 +112,8 @@ or if you wanted it to be a short busting string:
 
 ``__file__`` must be passed in so that **django-cachebuster** operates in the context of the Django project's settings.py file.  If it wasn't passed in, django-cachebuster would only have its own context from which to grab the ``.git`` directory, not that of the user's project.  (An alternative to this is to use Python's ``inspect`` module - but there are some warnings around using it.)
 
+There has also been a Mercurial (hg) detector contributed which operates in a similar fashion.
+
 ``CACHEBUSTER_PREPEND_STATIC``: **optional**; defaults to ``False``.
 
 ``CACHEBUSTER_PREPEND_MEDIA``: **optional**; defaults to ``False``.
